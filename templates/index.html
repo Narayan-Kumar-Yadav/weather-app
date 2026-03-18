@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App</title>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Search Section -->
+        <section class="search-section">
+            <h1>🌤️ Weather Forecast</h1>
+            <form method="POST" id="weatherForm">
+                <div class="input-group">
+                    <input type="text" name="city" placeholder="Enter city name (e.g., London)" value="{{ city }}" required>
+                    <button type="submit" id="searchBtn">
+                        <span class="btn-text">Search</span>
+                        <div class="spinner"></div>
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Error Message -->
+            {% if error %}
+                <div class="error-message">{{ error }}</div>
+            {% endif %}
+        </section>
+
+        <!-- Current Weather Card -->
+        {% if current_weather %}
+        <section class="current-weather fade-in">
+            <div class="weather-card current-card">
+                <h2>{{ current_weather.name }}</h2>
+                <div class="temp">{{ current_weather.temp }}°C</div>
+                <div class="description">{{ current_weather.description }}</div>
+                <div class="details">
+                    <span>💧 Humidity: {{ current_weather.humidity }}%</span>
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        <!-- 5-Day Forecast -->
+        {% if forecast %}
+        <section class="forecast-section fade-in">
+            <h3>5-Day Forecast</h3>
+            <div class="forecast-grid">
+                {% for day in forecast %}
+                <div class="forecast-card">
+                    <div class="day">{{ day.date }}</div>
+                    <div class="temp">{{ day.temp }}°C</div>
+                    <div class="description">{{ day.description }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+    </div>
+
+    <script>
+        // Button loading animation and form handling
+        document.getElementById('weatherForm').addEventListener('submit', function() {
+            const btn = document.getElementById('searchBtn');
+            const btnText = btn.querySelector('.btn-text');
+            const spinner = btn.querySelector('.spinner');
+            
+            // Show loading state
+            btn.disabled = true;
+            btnText.style.opacity = '0';
+            spinner.style.display = 'block';
+            btn.classList.add('loading');
+        });
+    </script>
+</body>
+</html>
